@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Audio-to-Text</title>
+</head>
+<body>
+    <h1>Audio-to-Text</h1>
+    <input type="file" id="audio-file" accept="audio/*">
+    <button onclick="transcribeAudio()">Transcribe</button>
+    <p id="output"></p>
+    <script>
+        var output = document.getElementById('output');
+        var audioInput = document.getElementById('audio-file');
+
+        function transcribeAudio() {
+            var file = audioInput.files[0];
+            if (file) {
+                var formData = new FormData();
+                formData.append('audio', file);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/process', true);
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        output.innerHTML = '<p>Transcription: ' + response.message + '</p>';
+                    }
+                };
+                xhr.send(formData);
+            }
+        }
+    </script>
+</body>
+</html>
